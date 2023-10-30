@@ -1,23 +1,5 @@
 package com.example.project;
 
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,7 +14,7 @@ public class Register extends AppCompatActivity {
     FirebaseAuth fAuth;
     FirebaseFirestore fStore;
 
-    CheckBox isAdmin_box , isClient_box;
+    CheckBox isAdmin_box , isClient_box, isEmployee_box;
 
 
     @Override
@@ -84,7 +66,7 @@ public class Register extends AppCompatActivity {
 
                 // check box selected or not
 
-                if(!(isAdmin_box.isChecked() || isClient_box.isChecked())){
+                if(!(isAdmin_box.isChecked() || isClient_box.isChecked() || isEmployee_box.isChecked())){
                     Toast.makeText(Register.this, "Select the Account type", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -102,13 +84,61 @@ public class Register extends AppCompatActivity {
                             userinfo.put("UserEmail",email.getText().toString());
                             userinfo.put("phoneNumber",phone.getText().toString());
 
+
+                            Map<String, Object> administrateurs = new HashMap<>();
+                            Map<String, Object> clients = new HashMap<>();
+                            Map<String, Object> employes = new HashMap<>();
+
+                            administrateurs.put("admin", "123admin456");
+
+                            fStore.collection("adminstrateurs").add(administrateurs).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                            fStore.collection("clients").add(administrateurs).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+                            fStore.collection("employes").add(administrateurs).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_LONG).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(), "Failure", Toast.LENGTH_LONG).show();
+                                }
+                            });
+
+
+
                             // specify if user is admin
                             if(isAdmin_box.isChecked()){
-                                userinfo.put("isAdmin","1");
+                                administrateurs.put("isAdmin","1");
                             }
 
                             if(isClient_box.isChecked()){
-                                userinfo.put("isClient","0");
+                                clients.put("isClient","0");
+                            }
+                            if(isEmployee_box.isChecked()){
+                                employes.put("isEmployee","0");
                             }
 
                             df.set(userinfo);
