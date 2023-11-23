@@ -25,12 +25,17 @@ import java.util.ArrayList;
 public class ManageServices extends AppCompatActivity implements ExampleDialog4.ExampleDialogListener {
     private ListView listView;
     private Button btnExit;
-
+    
+// Firebase Database references
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("services");
+    
+    // List to store service information
     ArrayList<String> listOfServices ;
     ArrayAdapter<String> adapter;
     Services service;
+
+    // Flags for confirmation and data update
     private boolean confirm =false;
     private String firstName="false";
     private String LastName = "false";
@@ -54,6 +59,7 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
         listOfServices =new ArrayList<>();
         adapter = new ArrayAdapter<String>(ManageServices.this, R.layout.service_info, R.id.printName, listOfServices);
 
+         // Retrieve data from Firebase and populate the list view
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -77,10 +83,11 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                // Handle data retrieval cancellation
             }
         });
 
+        // Handle long click on a list item
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -142,6 +149,7 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
 
     @Override
     public void whoIsChecked(boolean IsFirstNameChecked, boolean IsLastNameChecked, boolean IsDateOfBirthChecked, boolean IsAdressChecked, boolean IsLicenseTypeChecked, boolean IsAdressProofChecked, boolean IsProofOfStatusChecked, boolean IsPhotoChecked) {
+       // Set flags based on the checkboxes in the dialog
         if(IsAdressChecked)
             Adress ="true";
         if (IsDateOfBirthChecked)
@@ -159,11 +167,11 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
         if (IsLastNameChecked)
             ProofOfStatus ="true";
 
-        confirm2=true;
+        confirm2=true; // Set confirmation flag for update
     }
 
     @Override
     public void DeleteItem(){
-        confirm =true;
+        confirm =true; // Set confirmation flag for deletion
     }
 }
