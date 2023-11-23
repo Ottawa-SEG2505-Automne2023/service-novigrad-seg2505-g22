@@ -26,7 +26,7 @@ import java.util.ArrayList;
             // Act
             manageServices.onItemLongClick(/* Simuler les paramètres nécessaires */);
 
-            // Assert
+          
             // Vérifier que la liste des services est vide après la suppression
             assertEquals(0, manageServices.listOfServices.size());
         }
