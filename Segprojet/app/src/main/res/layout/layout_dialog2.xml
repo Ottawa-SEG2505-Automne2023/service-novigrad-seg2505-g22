@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:padding="16dp">
+
+
+    <CheckBox
+        android:id="@+id/AdressProof"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Adress Proof"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <CheckBox
+        android:id="@+id/ProofOfStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/AdressProof"
+        android:layout_marginTop="-1dp"
+        android:text="Proof of Status"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <CheckBox
+        android:id="@+id/Photo"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/ProofOfStatus"
+        android:layout_marginTop="1dp"
+        android:text="Photo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+</RelativeLayout>
