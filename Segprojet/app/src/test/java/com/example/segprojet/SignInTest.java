@@ -29,13 +29,9 @@ public class SignInTest {
         assertNotNull(passwordEditText);
         assertNotNull(signInButton);
 
-        // Effectue une action simulée (dans ce cas, cliquer sur le bouton de connexion)
+        // Effectue une action simulée 
         signInButton.performClick();
 
-        // Ici, vous pouvez ajouter des assertions supplémentaires en fonction du comportement que vous attendez
-        // par exemple, vérifier si une nouvelle activité est démarrée après le clic sur le bouton de connexion
-        // ...
-
-        // Assurez-vous de vérifier les éléments que vous souhaitez après l'action simulée.
+       
     }
 }
