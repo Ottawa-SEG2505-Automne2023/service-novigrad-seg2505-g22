@@ -1,19 +1,15 @@
 package com.example.segprojet;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,18 +21,13 @@ import java.util.ArrayList;
 public class ManageServices extends AppCompatActivity implements ExampleDialog4.ExampleDialogListener {
     private ListView listView;
     private Button btnExit;
-    
-// Firebase Database references
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("services");
-    
-    // List to store service information
     ArrayList<String> listOfServices ;
     ArrayAdapter<String> adapter;
     Services service;
-
-    // Flags for confirmation and data update
-    private boolean confirm =false;
+    boolean confirm =false;
     private String firstName="false";
     private String LastName = "false";
     private String DateOfBirth = "false";
@@ -59,7 +50,6 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
         listOfServices =new ArrayList<>();
         adapter = new ArrayAdapter<String>(ManageServices.this, R.layout.service_info, R.id.printName, listOfServices);
 
-         // Retrieve data from Firebase and populate the list view
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -83,55 +73,35 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Handle data retrieval cancellation
+
             }
         });
 
-        // Handle long click on a list item
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 openDialog4();
-                String user = listOfServices.get(position);
+                String user =listOfServices.get(position);
                 int firstSpacePosition = user.indexOf(" ");
-                final String name = user.substring(0, firstSpacePosition);
-
-                if (confirm) {
-                    // If the deletion confirmation is true
+                String name = user.substring(0,firstSpacePosition);
+                if(confirm)
+                {
                     listOfServices.remove(position);
-                    adapter.notifyDataSetChanged();
                     myRef.child(name).removeValue();
-                    confirm = false; // Reset confirmation flag
-                } else if (confirm2) {
-                    // If the update confirmation is true
-                    Services updatedService = new Services(name, firstName, LastName, DateOfBirth, Adress, LicenseType, AdressProof, ProofOfStatus, Photo);
+                    confirm=false;
+                }
+                else if(confirm2) {
+                    Services service = new Services(name, firstName, LastName, DateOfBirth, Adress, LicenseType, AdressProof, ProofOfStatus, Photo);
                     listOfServices.remove(position);
-                    adapter.notifyDataSetChanged();
+                    myRef.child(name).removeValue();
+                    myRef.child(name).setValue(service);
+                    confirm2=false;
 
-                    // Perform the update in Firebase
-                    myRef.child(name).setValue(updatedService).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                // Firebase update successful, no further action needed
-                            } else {
-                                // Handle the failure to update in Firebase
-                                // You might want to add a log statement or show a Toast here
-                                Log.e("ManageServices", "Error updating service in Firebase: " + task.getException());
-                            }
-                        }
-                    });
-
-                    confirm2 = false; // Reset confirmation flag
                 }
 
                 return true;
             }
         });
-
-
-
-
 
         // Handle the exit button click
         btnExit.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +119,6 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
 
     @Override
     public void whoIsChecked(boolean IsFirstNameChecked, boolean IsLastNameChecked, boolean IsDateOfBirthChecked, boolean IsAdressChecked, boolean IsLicenseTypeChecked, boolean IsAdressProofChecked, boolean IsProofOfStatusChecked, boolean IsPhotoChecked) {
-       // Set flags based on the checkboxes in the dialog
         if(IsAdressChecked)
             Adress ="true";
         if (IsDateOfBirthChecked)
@@ -167,11 +136,14 @@ public class ManageServices extends AppCompatActivity implements ExampleDialog4.
         if (IsLastNameChecked)
             ProofOfStatus ="true";
 
-        confirm2=true; // Set confirmation flag for update
+        confirm2=true;
     }
 
     @Override
     public void DeleteItem(){
-        confirm =true; // Set confirmation flag for deletion
+        confirm =true;
+    }
+
+    public void onItemLongClick() {
     }
 }
