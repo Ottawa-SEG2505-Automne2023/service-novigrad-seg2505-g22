@@ -27,7 +27,7 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
     ArrayList<String> listOfUsers ;
     ArrayAdapter<String> adapter;
     User user;
-    private boolean confirm =false;
+    public boolean confirm =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +56,7 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
             }
         });
-        
+
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -86,6 +86,9 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
     @Override
     public void DeleteItem(){
-       confirm =true;
+        confirm =true;
+    }
+
+    public void onItemLongClick() {
     }
 }
