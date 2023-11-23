@@ -63,6 +63,7 @@ public class CreateServices extends AppCompatActivity implements ExampleDialog.E
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Validate input fields
                 if (TextUtils.isEmpty(name.getText().toString()))
                 {
                     name.setError("name required");
@@ -76,7 +77,7 @@ public class CreateServices extends AppCompatActivity implements ExampleDialog.E
                 } else {
                     Services service = new Services(name.getText().toString(),firstName,LastName,DateOfBirth,Adress,LicenseType,AdressProof,ProofOfStatus,Photo);
 
-
+// Save the service to Firebase
                     myRef.child(name.getText().toString()).setValue(service);
 
                     startActivity(new Intent(getApplicationContext(),Admin.class));
@@ -85,11 +86,13 @@ public class CreateServices extends AppCompatActivity implements ExampleDialog.E
         });
     }
 
+    // Method to open the dialog for selecting required documents
     private void OpenDialog2() {
         ExampleDialog2 exampleDialog = new ExampleDialog2();
         exampleDialog.show(getSupportFragmentManager(),"example Dialog");
     }
 
+    // Method to open the dialog for selecting form elements
     public void OpenDialog1() {
 
         ExampleDialog exampleDialog = new ExampleDialog();
@@ -97,6 +100,7 @@ public class CreateServices extends AppCompatActivity implements ExampleDialog.E
     }
 
     @Override
+    // Listener method for checkbox selections from the form elements dialog
     public void whoIsChecked(boolean IsFirstNameChecked, boolean IsLastNameChecked, boolean IsDateOfBirthChecked, boolean IsAdressChecked, boolean IsLicenseTypeChecked) {
         String text ="Name "+IsLastNameChecked +" Surname "+IsFirstNameChecked+ " Date of birth "+ IsDateOfBirthChecked +" Adress "+ IsAdressChecked + " License Type "+IsLicenseTypeChecked;
 
@@ -117,6 +121,7 @@ public class CreateServices extends AppCompatActivity implements ExampleDialog.E
     }
 
     @Override
+    // Listener method for checkbox selections from the required documents dialog
     public void whoIsChecked(boolean IsFirstNameChecked, boolean IsLastNameChecked, boolean IsDateOfBirthChecked) {
         String text ="Adress Proof "+IsLastNameChecked +" Proof Of Status "+IsFirstNameChecked+ " Photo  "+ IsDateOfBirthChecked ;
         if(IsFirstNameChecked)
