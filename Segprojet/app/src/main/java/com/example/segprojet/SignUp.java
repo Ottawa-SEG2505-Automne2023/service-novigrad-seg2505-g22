@@ -31,7 +31,7 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up3);
-
+        //crée des champs et boutons des informations de l'utilisateur
         newName = findViewById(R.id.newName);
         newUsername = findViewById(R.id.newUsername);
         newPassword = findViewById(R.id.newPassword);
@@ -55,11 +55,11 @@ public class SignUp extends AppCompatActivity {
                     return;
                 }
 
-                // Sauvegarde des informations de l'utilisateur dans la base de données Firebase Realtime
+                // Sauvegarde les informations de l'utilisateur dans la base de données Firebase Realtime
                 String typeOfAccount = client.isChecked() ? "client" : "Employee";
                 User userData = new User(username, email, password, typeOfAccount, name, "");
                 myRef.child(username).setValue(userData);
-
+               // Affiche un message de réussite et redirige vers l'écran de connexion
                 Toast.makeText(SignUp.this, "Account created successfully", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(SignUp.this, SignIn.class));
             }
