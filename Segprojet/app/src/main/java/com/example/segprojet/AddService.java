@@ -25,6 +25,8 @@ public class AddService extends AppCompatActivity implements ExampleDialog5.Exam
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("services");
     DatabaseReference myRef2 = database.getReference("succursales");
+
+    // Lists and adapters for displaying and managing services
     ArrayList<String> listOfServices;
     ArrayList<Services> list;
     ArrayAdapter<String> adapter;
@@ -43,6 +45,7 @@ public class AddService extends AppCompatActivity implements ExampleDialog5.Exam
         listOfServices = new ArrayList<>();
         adapter = new ArrayAdapter<String>(AddService.this, R.layout.service_info, R.id.printName, listOfServices);
 
+        // Retrieve data from Firebase and populate the list view
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -69,6 +72,7 @@ public class AddService extends AppCompatActivity implements ExampleDialog5.Exam
             }
         });
 
+         // Handle long click on a list item
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -77,17 +81,19 @@ public class AddService extends AppCompatActivity implements ExampleDialog5.Exam
                 Intent intent =getIntent();
                 String name2=intent.getStringExtra("SuccursaleName");
 
-
-
+                // Extract the service name from the selected list item
                     String user = listOfServices.get(position);
                     int firstSpacePosition = user.indexOf(" ");
                     String name = user.substring(0, firstSpacePosition);
                 String name4=name;
+
+                 // Query to check for the existence of the selected service in the "services" database
                     Query checkUser = myRef.orderByChild("name").equalTo(name);
 
                     checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                             // Retrieve the selected service data
                             Services service =snapshot.child(name4).getValue(Services.class);
                             list.add(service);
                         }
@@ -118,11 +124,12 @@ public class AddService extends AppCompatActivity implements ExampleDialog5.Exam
 
 
 
-                return false;
+                return false; // Returning false to allow further processing of the click event
             }
         });
 
     }
+      // Method to open the dialog for adding services
         private void openDialog5 () {
             ExampleDialog5 exampleDialog = new ExampleDialog5();
             exampleDialog.show(getSupportFragmentManager(), "example Dialog");
