@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -17,46 +19,112 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Employee extends AppCompatActivity {
 
+
+    private Button selectHours;
+    private Button SelectSuccursale;
+    private Button selectServices;
+    private Button logOut;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employee);
 
-        Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
 
-        // Only handle login, no need for other actions
-        handleLogin(username);
-    }
+        selectHours =(Button)findViewById(R.id.selectHours);
+        selectServices =(Button)findViewById(R.id.selectServices);
+        logOut =(Button)findViewById(R.id.logOut2);
+        SelectSuccursale = (Button)findViewById(R.id.SelectSucc);
 
-    private void handleLogin(String username) {
-        if (TextUtils.isEmpty(username)) {
-            // Handle the case where username is empty
-            Toast.makeText(Employee.this, "Invalid username", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        boolean confirm=false;
+        Intent intent =getIntent();
+        String Username = intent.getStringExtra("username");
 
-        Query checkUser = myRef.orderByChild("username").equalTo(username);
-        checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+        SelectSuccursale.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String succursaleName = snapshot.child(username).child("succursaleName").getValue(String.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), com.example.segprojet.SelectSuccursale.class);
 
-                if (!TextUtils.isEmpty(succursaleName)) {
-                    // Login successful, you can perform any additional actions here if needed
-                    Toast.makeText(Employee.this, "Login successful", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle the case where succursaleName is empty
-                    Toast.makeText(Employee.this, "Select a Succursale first", Toast.LENGTH_SHORT).show();
-                }
+                intent.putExtra("Username",Username);
+
+                startActivity(intent);
             }
+        });
 
+
+
+        selectHours.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle the error if needed
+            public void onClick(View v) {
+                String username = Username;
+                Query checkUser = myRef.orderByChild("username").equalTo(username);
+                checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String SuccursaleName = snapshot.child(username).child("succursaleName").getValue(String.class);
+                        Toast.makeText(Employee.this, username+" "+SuccursaleName, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), SelectHours.class);
+
+                        if (!TextUtils.isEmpty(SuccursaleName)) {
+                            intent.putExtra("SuccursaleName", SuccursaleName);
+                            startActivity(intent);
+                        } else {
+
+                            //Toast.makeText(Employee.this, "Select A Succursale first", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
+            }
+        });
+
+        selectServices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username = Username;
+                Query checkUser = myRef.orderByChild("username").equalTo(Username);
+                checkUser.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String SuccursaleName = snapshot.child(username).child("succursaleName").getValue(String.class);
+                        Intent intent = new Intent(getApplicationContext(), AddService.class);
+
+                        if (!TextUtils.isEmpty(SuccursaleName)) {
+                            intent.putExtra("SuccursaleName", SuccursaleName);
+                            intent.putExtra("username",username);
+                            startActivity(intent);
+                        } else {
+
+                            Toast.makeText(Employee.this, "Select A Succursale first", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }
+        });
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SignIn.class));
             }
         });
     }

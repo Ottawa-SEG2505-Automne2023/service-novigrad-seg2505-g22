@@ -21,15 +21,13 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
 
     private ListView listView;
-    // Firebase database references
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference myRef = database.getReference("users");
-
-    // List to store user info
     ArrayList<String> listOfUsers ;
     ArrayAdapter<String> adapter;
     User user;
-    public boolean confirm =false;
+    boolean confirm =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +38,7 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
         listOfUsers =new ArrayList<>();
         adapter = new ArrayAdapter<String>(DeleteAccounts.this, R.layout.user_info,R.id.printUsername,listOfUsers);
-        // Retrieve data from Firebase and populate the list view
+
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -58,7 +56,7 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
             }
         });
-
+        
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -88,10 +86,9 @@ public class DeleteAccounts extends AppCompatActivity implements ExampleDialog3.
 
     @Override
     public void DeleteItem(){
-        confirm =true; // Set confirmation flag when deletion is requested
+       confirm =true;
     }
 
     public void onItemLongClick() {
-        // Additional logic for long click handling, if required
     }
 }
